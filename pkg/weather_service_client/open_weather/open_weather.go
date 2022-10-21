@@ -14,19 +14,33 @@ import (
 type ConfigOpenWeather struct {
 	Limit int
 	Appid string
+	Units string
 }
 
 type openWeatherApi struct {
 	cfg *ConfigOpenWeather
 }
 
-func NewOpenWeatherApi(limit int, appid string) *openWeatherApi {
+func NewOpenWeatherApi(limit int, appid, units string) *openWeatherApi {
 	return &openWeatherApi{
 		cfg: &ConfigOpenWeather{
 			Limit: limit,
 			Appid: appid,
+			Units: units,
 		},
 	}
+}
+
+func (o *openWeatherApi) GetTowns() (towns []entities.Town) {
+	names := config.GetTownList()
+	for _, name := range names {
+		towns = append(towns, o.getTownStruct(name))
+	}
+	return towns
+}
+
+func (o *openWeatherApi) GetPredictionWeathers() (listWeather []entities.ListWeather) {
+	return listWeather
 }
 
 func (o *openWeatherApi) getTownStruct(name string) entities.Town {
@@ -50,12 +64,4 @@ func (o *openWeatherApi) getTownStruct(name string) entities.Town {
 		logrus.Fatal(err)
 	}
 	return town[0]
-}
-
-func (o *openWeatherApi) GetTownStructs() (towns []entities.Town) {
-	names := config.GetTownList()
-	for _, name := range names {
-		towns = append(towns, o.getTownStruct(name))
-	}
-	return towns
 }
