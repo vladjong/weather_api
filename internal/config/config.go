@@ -16,20 +16,16 @@ type Config struct {
 		Port       string `env:"PORT" env-default:"8080"`
 		SocketFile string `env:"SOCKET_FILE" env-default:"app.sock"`
 	}
-	AppConfig struct {
-		LogLevel  string `env:"LOG_LEVEL" env-default:"trace"`
-		AdminUser struct {
-			Email    string `env:"ADMIN_EMAIL" env-default:"admin"`
-			Password string `env:"ADMIN_PWD" env-default:"admin"`
-		}
+	WeatherAPI struct {
+		Key string `env:"KEY" env-default:"8f7a589bb238eb36173737ebbe1ec8c6"`
 	}
 	PostgresDB struct {
 		Host     string `env:"HOST" env-default:"localhost"`
 		Port     string `env:"PORT" env-default:"5432"`
-		Database string `env:"DATABASE" env-default:"weather_api"`
-		Auth_db  string `env:"AUTH_DB" env-default:"admin"`
 		Username string `env:"USERNAME" env-default:""`
 		Password string `env:"AUTH_DB" env-default:""`
+		DBName   string `env:"DBNAME" env-default:"postgres"`
+		SSLMode  string `env:"SSLMODE" env-default:"disable"`
 	}
 }
 
