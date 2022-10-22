@@ -1,7 +1,8 @@
 package entities
 
 type ListWeather struct {
-	List []Weather `json:"list"`
+	List        []Weather `json:"list"`
+	WeatherCity City      `json:"city"`
 }
 
 type Weather struct {
@@ -28,4 +29,12 @@ type Main struct {
 type InfoWeather struct {
 	Main        string `json:"main"`
 	Description string `json:"description"`
+}
+
+type Info struct {
+	Main        Main
+	InfoWeather []InfoWeather
+	Clouds      map[string]float64
+	Wind        map[string]float64
+	Visibility  float64
 }

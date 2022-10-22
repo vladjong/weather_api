@@ -6,6 +6,7 @@ import (
 	"weather_api/internal/entities"
 
 	"github.com/jmoiron/sqlx"
+	"github.com/sirupsen/logrus"
 )
 
 type weatherServiceStorage struct {
@@ -14,6 +15,7 @@ type weatherServiceStorage struct {
 
 type WeatherStorage interface {
 	CreateCity(city entities.City) (id int, err error)
+	CreateWeather(weather entities.Weather, cityId int, info []byte) (id int, err error)
 }
 
 func NewWeatherServiceStorage(db *sqlx.DB) *weatherServiceStorage {
@@ -23,9 +25,26 @@ func NewWeatherServiceStorage(db *sqlx.DB) *weatherServiceStorage {
 }
 
 func (w *weatherServiceStorage) CreateCity(city entities.City) (id int, err error) {
-	query := fmt.Sprintf("INSERT INTO %s (name, lat, lon, country) VALUES ($1, $2, $3, $4) ON CONFLICT (name) DO UPDATE SET (name, lat, lon, country) = (EXCLUDED.name, EXCLUDED.lat, EXCLUDED.lon, EXCLUDED.country) RETURNING id", config.CitiesTable)
+	query := fmt.Sprintf(`INSERT INTO %s (name, lat, lon, country)
+							VALUES ($1, $2, $3, $4) ON CONFLICT (name)
+							DO UPDATE SET (name, lat, lon, country) = (EXCLUDED.name, EXCLUDED.lat, EXCLUDED.lon, EXCLUDED.country)
+							RETURNING id`, config.CitiesTable)
 	row := w.db.QueryRow(query, city.Name, city.Lat, city.Lon, city.Country)
 	if err := row.Scan(&id); err != nil {
+		return 0, err
+	}
+	return id, nil
+}
+
+func (w *weatherServiceStorage) CreateWeather(weather entities.Weather, cityId int, info []byte) (id int, err error) {
+	query := fmt.Sprintf(`INSERT INTO %s (city_id, temp, date, info)
+							VALUES ($1, $2, $3, $4)
+							ON CONFLICT ON CONSTRAINT %s
+							DO UPDATE SET (city_id, temp, date, info) = (EXCLUDED.city_id, EXCLUDED.temp, EXCLUDED.date, EXCLUDED.info)
+							RETURNING id`, config.WeathersTable, config.ConstraintWeather)
+	row := w.db.QueryRow(query, cityId, weather.Main.Temp, weather.Date, info)
+	if err := row.Scan(&id); err != nil {
+		logrus.Fatal(err)
 		return 0, err
 	}
 	return id, nil

@@ -56,7 +56,11 @@ func (s *Service) connectExternalService() {
 	postgres := postgressql.NewWeatherServiceStorage(s.postgresClient)
 	useCase := usercase.NewWeatherServiceUseCase(postgres)
 	x := externalservice.NewOpenWeatherApi(openWeatherApi, useCase)
-	x.SetCities()
+	cities, err := x.CreateCities()
+	if err != nil {
+		logrus.Fatal(err)
+	}
+	x.CreateWeathers(cities)
 }
 
 func (s *Service) startHTTP() {

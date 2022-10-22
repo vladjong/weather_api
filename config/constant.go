@@ -26,6 +26,7 @@ func GetTownList() []string {
 }
 
 const (
-	CitiesTable   = "Cities"
-	WeathersTable = "Weathers"
+	CitiesTable       = "Cities"
+	WeathersTable     = "Weathers"
+	ConstraintWeather = "unique_weather"
 )

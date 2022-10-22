@@ -41,12 +41,12 @@ func (o *openWeatherApi) GetCities() (cities []entities.City) {
 
 func (o *openWeatherApi) GetWeatherLists(cities []entities.City) (listWeather []entities.ListWeather) {
 	for _, city := range cities {
-		listWeather = append(listWeather, o.getWeatherListStruct(city.Lat, city.Lon))
+		listWeather = append(listWeather, o.getWeatherListStruct(city.ID, city.Lat, city.Lon))
 	}
 	return listWeather
 }
 
-func (o *openWeatherApi) getWeatherListStruct(lat, lon float64) (listWeather entities.ListWeather) {
+func (o *openWeatherApi) getWeatherListStruct(id int, lat, lon float64) (listWeather entities.ListWeather) {
 	url := fmt.Sprintf("http://api.openweathermap.org/data/2.5/forecast?lat=%f&lon=%f&units=%s&appid=%s",
 		lat, lon, o.cfg.Units, o.cfg.Appid)
 	response, err := http.Get(url)
@@ -65,6 +65,7 @@ func (o *openWeatherApi) getWeatherListStruct(lat, lon float64) (listWeather ent
 	if err := json.Unmarshal(jsonBytes, &listWeather); err != nil {
 		logrus.Fatal(err)
 	}
+	listWeather.WeatherCity.ID = id
 	return listWeather
 }
 

@@ -10,8 +10,9 @@ CREATE TABLE Cities
 CREATE TABLE Weathers
 (
     id SERIAL PRIMARY KEY,
-    city_id INT REFERENCES Cities (id),
+    city_id INT REFERENCES Cities (id) NOT NULL,
     temp NUMERIC NOT NULL,
-    date TIMESTAMP UNIQUE,
-    info JSON
+    date TIMESTAMP NOT NULL,
+    info JSON,
+    CONSTRAINT unique_weather UNIQUE(city_id, date)
 );
