@@ -80,7 +80,7 @@ func (s *Service) startHTTP() {
 	if err := server.Shutdown(context.Background()); err != nil {
 		logrus.Errorf("Error: occured on server shutdown: %s", err.Error())
 	}
-	// if err := s.postgresClient.Close(); err != nil {
-	// 	logrus.Errorf("Error: occured on db connection close: %s", err.Error())
-	// }
+	if err := s.postgresClient.Close(); err != nil {
+		logrus.Errorf("Error: occured on db connection close: %s", err.Error())
+	}
 }

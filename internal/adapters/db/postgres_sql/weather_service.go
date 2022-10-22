@@ -13,11 +13,6 @@ type weatherServiceStorage struct {
 	db *sqlx.DB
 }
 
-type WeatherStorage interface {
-	CreateCity(city entities.City) (id int, err error)
-	CreateWeather(weather entities.Weather, cityId int, info []byte) (id int, err error)
-}
-
 func NewWeatherServiceStorage(db *sqlx.DB) *weatherServiceStorage {
 	return &weatherServiceStorage{
 		db: db,
