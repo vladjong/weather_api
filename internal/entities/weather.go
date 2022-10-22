@@ -40,10 +40,17 @@ type Info struct {
 }
 
 type WeatherPredict struct {
-	Country     string   `json:"country" db:"country"`
-	Name        string   `json:"name" db:"name"`
-	AverageTemp float64  `json:"average_temp"`
-	Dates       []string `json:"dates"`
+	Country string  `json:"country" db:"country"`
+	Name    string  `json:"name" db:"name"`
+	AvTemp  float64 `json:"av_temp" db:"av_temp"`
+	Dates   []uint8 `json:"dates" db:"dates"`
+}
+
+type WeatherPredictDTO struct {
+	Country string   `json:"country" db:"country"`
+	Name    string   `json:"name" db:"name"`
+	AvTemp  float64  `json:"av_temp" db:"av_temp"`
+	Dates   []string `json:"dates" db:"dates"`
 }
 
 type WeatherDetails struct {

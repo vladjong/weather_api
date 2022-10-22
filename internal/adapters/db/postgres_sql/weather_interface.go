@@ -11,6 +11,6 @@ type WeatherStorage interface {
 
 type WeatherStorageApi interface {
 	GetCities() (names []string, err error)
-	GetWeatherInCity(name string) (weathers []entities.WeatherDetails, err error)
-	GetDetaiWeatherInCity(name string, date string) (weathers []entities.WeatherPredict, err error)
+	GetWeatherInCity(name string) (weather entities.WeatherPredict, err error)
+	GetDetaiWeatherInCity(name string, date string) (weather entities.WeatherDetails, err error)
 }

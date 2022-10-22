@@ -17,10 +17,23 @@ func (w *weatherApiUseCase) GetCities() (names []string, err error) {
 	return w.storage.GetCities()
 }
 
-func (w *weatherApiUseCase) GetWeatherInCity(name string) (weathers []entities.WeatherDetails, err error) {
-	return w.storage.GetWeatherInCity(name)
+func (w *weatherApiUseCase) GetWeatherInCity(name string) (entities.WeatherPredictDTO, error) {
+	weather, err := w.storage.GetWeatherInCity(name)
+	dates := weather.Dates
+	var datesStr []string
+	for _, date := range dates {
+		str := string(date)
+		// str = strings.ReplaceAll(str, "/", "")
+		datesStr = append(datesStr, str)
+	}
+	return entities.WeatherPredictDTO{
+		Country: weather.Country,
+		Name:    weather.Name,
+		AvTemp:  weather.AvTemp,
+		Dates:   datesStr,
+	}, err
 }
 
-func (w *weatherApiUseCase) GetDetaiWeatherInCity(name string, date string) (weathers []entities.WeatherPredict, err error) {
+func (w *weatherApiUseCase) GetDetaiWeatherInCity(name string, date string) (entities.WeatherDetails, error) {
 	return w.storage.GetDetaiWeatherInCity(name, date)
 }

@@ -46,13 +46,29 @@ func (w *weatherServiceStorage) CreateWeather(weather entities.Weather, cityId i
 }
 
 func (w *weatherServiceStorage) GetCities() (names []string, err error) {
+	query := fmt.Sprintf(`SELECT DISTINCT c.name
+							FROM %s AS w
+							JOIN %s AS c ON w.city_id = c.id
+							ORDER BY 1`, config.WeathersTable, config.CitiesTable)
+	if err := w.db.Select(&names, query); err != nil {
+		return nil, err
+	}
 	return names, nil
 }
 
-func (w *weatherServiceStorage) GetWeatherInCity(name string) (weathers []entities.WeatherDetails, err error) {
-	return weathers, nil
+func (w *weatherServiceStorage) GetWeatherInCity(name string) (weather entities.WeatherPredict, err error) {
+	query := fmt.Sprintf(`SELECT DISTINCT c.country, c.name, array_agg(w.date) AS dates, AVG(w.temp) AS av_temp
+							FROM %s AS w
+							JOIN %s AS c ON w.city_id = c.id
+							WHERE c.name = $1
+							GROUP BY c.country, c.name`, config.WeathersTable, config.CitiesTable)
+	var weathers []entities.WeatherPredict
+	if err := w.db.Select(&weathers, query, name); err != nil {
+		return weather, err
+	}
+	return weathers[0], nil
 }
 
-func (w *weatherServiceStorage) GetDetaiWeatherInCity(name string, date string) (weathers []entities.WeatherPredict, err error) {
+func (w *weatherServiceStorage) GetDetaiWeatherInCity(name string, date string) (weathers entities.WeatherDetails, err error) {
 	return weathers, nil
 }

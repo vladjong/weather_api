@@ -22,7 +22,8 @@ func (h *Handler) NewRouter() *gin.Engine {
 
 	api := router.Group("/api")
 	{
-		api.GET("/", h.GetCities)
+		api.GET("/cities", h.GetCities)
+		api.GET("/city/:name", h.GetWeatherInCity)
 	}
 	return router
 }
