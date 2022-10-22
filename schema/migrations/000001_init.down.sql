@@ -1,1 +1,1 @@
-DROP TABLE town;
+DROP TABLE Cities, Weathers CASCADE;
