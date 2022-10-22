@@ -31,19 +31,44 @@ func NewOpenWeatherApi(limit int, appid, units string) *openWeatherApi {
 	}
 }
 
-func (o *openWeatherApi) GetTowns() (towns []entities.Town) {
+func (o *openWeatherApi) GetCities() (cities []entities.City) {
 	names := config.GetTownList()
 	for _, name := range names {
-		towns = append(towns, o.getTownStruct(name))
+		cities = append(cities, o.getCityStruct(name))
 	}
-	return towns
+	return cities
 }
 
-func (o *openWeatherApi) GetPredictionWeathers() (listWeather []entities.ListWeather) {
+func (o *openWeatherApi) GetWeatherLists(cities []entities.City) (listWeather []entities.ListWeather) {
+	for _, city := range cities {
+		listWeather = append(listWeather, o.getWeatherListStruct(city.Lat, city.Lon))
+	}
 	return listWeather
 }
 
-func (o *openWeatherApi) getTownStruct(name string) entities.Town {
+func (o *openWeatherApi) getWeatherListStruct(lat, lon float64) (listWeather entities.ListWeather) {
+	url := fmt.Sprintf("http://api.openweathermap.org/data/2.5/forecast?lat=%f&lon=%f&units=%s&appid=%s",
+		lat, lon, o.cfg.Units, o.cfg.Appid)
+	response, err := http.Get(url)
+	if err != nil {
+		logrus.Fatal(err)
+	}
+	jsonBytes, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		logrus.Fatal(err)
+	}
+	defer func() {
+		if err := response.Body.Close(); err != nil {
+			logrus.Fatal(err)
+		}
+	}()
+	if err := json.Unmarshal(jsonBytes, &listWeather); err != nil {
+		logrus.Fatal(err)
+	}
+	return listWeather
+}
+
+func (o *openWeatherApi) getCityStruct(name string) entities.City {
 	url := fmt.Sprintf("http://api.openweathermap.org/geo/1.0/direct?q=%s&limit=%d&appid=%s",
 		name, o.cfg.Limit, o.cfg.Appid)
 	response, err := http.Get(url)
@@ -59,7 +84,7 @@ func (o *openWeatherApi) getTownStruct(name string) entities.Town {
 			logrus.Fatal(err)
 		}
 	}()
-	var town []entities.Town
+	var town []entities.City
 	if err := json.Unmarshal(jsonBytes, &town); err != nil {
 		logrus.Fatal(err)
 	}
