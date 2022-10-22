@@ -19,12 +19,12 @@ type Config struct {
 	WeatherAPI struct {
 		Key string `env:"KEY" env-default:"8f7a589bb238eb36173737ebbe1ec8c6"`
 	}
-	PostgresDB struct {
-		Host     string `env:"HOST" env-default:"localhost"`
+	PostgresSQL struct {
+		Host     string `env:"HOST" env-default:"0.0.0.0"`
 		Port     string `env:"PORT" env-default:"5432"`
-		Username string `env:"USERNAME" env-default:""`
-		Password string `env:"AUTH_DB" env-default:""`
-		DBName   string `env:"DBNAME" env-default:"postgres"`
+		Username string `env:"USERNAME" env-default:"postgres"`
+		Password string `env:"AUTH_DB" env-default:"postgres"`
+		DBName   string `env:"DBNAME" env-default:"weather_api"`
 		SSLMode  string `env:"SSLMODE" env-default:"disable"`
 	}
 }

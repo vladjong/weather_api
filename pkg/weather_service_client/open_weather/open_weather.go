@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"weather_api/internal/config"
+	"weather_api/config"
 	"weather_api/internal/entities"
 
 	"github.com/sirupsen/logrus"
