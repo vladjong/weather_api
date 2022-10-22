@@ -1,14 +1,19 @@
 package v1
 
 import (
+	"weather_api/internal/usercase"
+
 	"github.com/gin-gonic/gin"
 )
 
 type Handler struct {
+	weatherUseCase usercase.WeatherAPI
 }
 
-func NewHandler() *Handler {
-	return &Handler{}
+func NewHandler(weatherUseCase usercase.WeatherAPI) *Handler {
+	return &Handler{
+		weatherUseCase: weatherUseCase,
+	}
 }
 
 func (h *Handler) NewRouter() *gin.Engine {
@@ -17,7 +22,7 @@ func (h *Handler) NewRouter() *gin.Engine {
 
 	api := router.Group("/api")
 	{
-		api.GET("/", h.get)
+		api.GET("/", h.GetCities)
 	}
 	return router
 }

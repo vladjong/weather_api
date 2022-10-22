@@ -12,6 +12,7 @@ import (
 type openWeatherApi struct {
 	weatherService weatherserviceclient.WeatherService
 	weatherUseCase usercase.WeatherService
+	cities         []entities.City
 }
 
 func NewOpenWeatherApi(weatherService weatherserviceclient.WeatherService, weatherUseCase usercase.WeatherService) *openWeatherApi {
@@ -21,20 +22,21 @@ func NewOpenWeatherApi(weatherService weatherserviceclient.WeatherService, weath
 	}
 }
 
-func (o *openWeatherApi) CreateCities() ([]entities.City, error) {
+func (o *openWeatherApi) CreateCities() error {
 	cities := o.weatherService.GetCities()
 	for i := 0; i < len(cities); i++ {
 		id, err := o.weatherUseCase.CreateCity(cities[i])
 		if err != nil {
-			return cities, err
+			return err
 		}
 		cities[i].ID = id
 	}
-	return cities, nil
+	o.cities = cities
+	return nil
 }
 
-func (o *openWeatherApi) CreateWeathers(cities []entities.City) {
-	weathers := o.weatherService.GetWeatherLists(cities)
+func (o *openWeatherApi) CreateWeathers() {
+	weathers := o.weatherService.GetWeatherLists(o.cities)
 	for _, listWeather := range weathers {
 		for _, weather := range listWeather.List {
 			o.weatherUseCase.CreateWeather(weather, listWeather.WeatherCity.ID, o.getJson(weather))

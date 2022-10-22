@@ -15,7 +15,7 @@ type Weather struct {
 }
 
 type Main struct {
-	Temp       float64 `json:"temp"`
+	Temp       float64 `json:"temp" db:"temp"`
 	FeelsLike  float64 `json:"feels_like"`
 	TempMin    float64 `json:"temp_min"`
 	TempMap    float64 `json:"temp_map"`
@@ -37,4 +37,18 @@ type Info struct {
 	Clouds      map[string]float64
 	Wind        map[string]float64
 	Visibility  float64
+}
+
+type WeatherPredict struct {
+	Country     string   `json:"country" db:"country"`
+	Name        string   `json:"name" db:"name"`
+	AverageTemp float64  `json:"average_temp"`
+	Dates       []string `json:"dates"`
+}
+
+type WeatherDetails struct {
+	CityID int     `json:"city_id" db:"city_id"`
+	Temp   float64 `json:"temp" db:"temp"`
+	Date   string  `json:"date" db:"date"`
+	Info   Info    `json:"info" db:"info"`
 }

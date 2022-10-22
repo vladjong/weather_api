@@ -44,3 +44,15 @@ func (w *weatherServiceStorage) CreateWeather(weather entities.Weather, cityId i
 	}
 	return id, nil
 }
+
+func (w *weatherServiceStorage) GetCities() (names []string, err error) {
+	return names, nil
+}
+
+func (w *weatherServiceStorage) GetWeatherInCity(name string) (weathers []entities.WeatherDetails, err error) {
+	return weathers, nil
+}
+
+func (w *weatherServiceStorage) GetDetaiWeatherInCity(name string, date string) (weathers []entities.WeatherPredict, err error) {
+	return weathers, nil
+}

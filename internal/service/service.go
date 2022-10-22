@@ -25,7 +25,6 @@ type Service struct {
 
 func NewService(cfg *config.Config) (service Service, err error) {
 	// Добавить свагер
-	// Добавить роутер
 	postrgresClient, err := postrgres.NewClient(
 		postrgres.PostgresConfig{
 			Host:     cfg.PostgresSQL.Host,
@@ -47,7 +46,7 @@ func NewService(cfg *config.Config) (service Service, err error) {
 func (s *Service) Run() error {
 	s.connectExternalService()
 	// запуск htttp
-	// s.startHTTP()
+	s.startHTTP()
 	return nil
 }
 
@@ -55,18 +54,19 @@ func (s *Service) connectExternalService() {
 	openWeatherApi := openweather.NewOpenWeatherApi(s.cfg.WeatherAPI.Limit, s.cfg.WeatherAPI.Key, s.cfg.WeatherAPI.Units)
 	postgres := postgressql.NewWeatherServiceStorage(s.postgresClient)
 	useCase := usercase.NewWeatherServiceUseCase(postgres)
-	x := externalservice.NewOpenWeatherApi(openWeatherApi, useCase)
-	cities, err := x.CreateCities()
-	if err != nil {
+	weatherService := externalservice.NewOpenWeatherApi(openWeatherApi, useCase)
+	if err := weatherService.CreateCities(); err != nil {
 		logrus.Fatal(err)
 	}
-	x.CreateWeathers(cities)
+	weatherService.CreateWeathers()
 }
 
 func (s *Service) startHTTP() {
 	logrus.Info("HTTP Server initializing")
 	server := new(server.Server)
-	handlers := new(v1.Handler)
+	postgres := postgressql.NewWeatherServiceStorage(s.postgresClient)
+	useCase := usercase.NewWeatherApiUseCase(postgres)
+	handlers := v1.NewHandler(useCase)
 	go func() {
 		if err := server.Run(s.cfg.Listen.Port, handlers.NewRouter()); err != nil {
 			logrus.Fatalf("Error: occured while running HTTP Server: %s", err.Error)
