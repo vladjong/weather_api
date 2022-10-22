@@ -10,6 +10,7 @@ import (
 func main() {
 	logrus.Info("Config initializing")
 	cfg := config.GetConfig()
+
 	logrus.Info("Running service")
 	service, err := service.NewService(cfg)
 	if err != nil {

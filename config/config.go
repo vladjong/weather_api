@@ -8,13 +8,8 @@ import (
 )
 
 type Config struct {
-	IsDebug       bool `env:"IS_DEBUG" env-default:"false"`
-	IsDevelopment bool `env:"IS_DEV" env-default:"false"`
-	Listen        struct {
-		Type       string `env:"LISTEN_TYPE" env-default:"port"`
-		BindIP     string `env:"IS_DEV" env-default:"0.0.0.0"`
-		Port       string `env:"PORT" env-default:"8080"`
-		SocketFile string `env:"SOCKET_FILE" env-default:"app.sock"`
+	Listen struct {
+		Port string `env:"PORT" env-default:":8080"`
 	}
 	WeatherAPI struct {
 		Key string `env:"KEY" env-default:"8f7a589bb238eb36173737ebbe1ec8c6"`
