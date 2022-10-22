@@ -1,0 +1,17 @@
+CREATE TABLE Cities
+(
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(30) NOT NULL UNIQUE,
+    lat NUMERIC NOT NULL,
+    lon NUMERIC NOT NULL,
+    country VARCHAR(30) NOT NULL
+);
+
+CREATE TABLE Weathers
+(
+    id SERIAL PRIMARY KEY,
+    city_id INT REFERENCES Cities (id),
+    temp NUMERIC NOT NULL,
+    date TIMESTAMP UNIQUE,
+    info JSON
+);

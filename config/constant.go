@@ -24,3 +24,8 @@ func GetTownList() []string {
 		"Oslo",
 	}
 }
+
+const (
+	CitiesTable   = "Cities"
+	WeathersTable = "Weathers"
+)

@@ -12,14 +12,16 @@ type Config struct {
 		Port string `env:"PORT" env-default:":8080"`
 	}
 	WeatherAPI struct {
-		Key string `env:"KEY" env-default:"8f7a589bb238eb36173737ebbe1ec8c6"`
+		Key   string `env:"KEY" env-default:"8f7a589bb238eb36173737ebbe1ec8c6"`
+		Limit int    `env:"LIMIT" env-default:"1"`
+		Units string `env:"UNITS" env-default:"metric"`
 	}
 	PostgresSQL struct {
-		Host     string `env:"HOST" env-default:"0.0.0.0"`
-		Port     string `env:"PORT" env-default:"5432"`
+		Host     string `env:"HOST" env-default:"localhost"`
+		Port     string `env:"PORT" env-default:"5436"`
 		Username string `env:"USERNAME" env-default:"postgres"`
 		Password string `env:"AUTH_DB" env-default:"postgres"`
-		DBName   string `env:"DBNAME" env-default:"weather_api"`
+		DBName   string `env:"DBNAME" env-default:"postgres"`
 		SSLMode  string `env:"SSLMODE" env-default:"disable"`
 	}
 }

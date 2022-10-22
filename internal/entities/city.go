@@ -1,7 +1,9 @@
 package entities
 
 type City struct {
-	Name string  `json:"name"`
-	Lat  float64 `json:"lat"`
-	Lon  float64 `json:"lon"`
+	ID      int     `json:"-" db:"id"`
+	Name    string  `json:"name" db:"name"`
+	Lat     float64 `json:"lat" db:"lat"`
+	Lon     float64 `json:"lon" db:"lon"`
+	Country string  `json:"country" db:"country"`
 }

@@ -6,44 +6,57 @@ import (
 	"os/signal"
 	"syscall"
 	"weather_api/config"
+	postgressql "weather_api/internal/adapters/db/postgres_sql"
+	externalservice "weather_api/internal/controller/external_service"
 	v1 "weather_api/internal/controller/http/v1"
+	"weather_api/internal/usercase"
+	"weather_api/pkg/client/postrgres"
 	"weather_api/pkg/server"
+	openweather "weather_api/pkg/weather_service_client/open_weather"
 
+	"github.com/jmoiron/sqlx"
 	"github.com/sirupsen/logrus"
 )
 
 type Service struct {
-	cfg *config.Config
-	// postgresClient *sqlx.DB
-	// handler        v1.Handler
+	cfg            *config.Config
+	postgresClient *sqlx.DB
 }
 
 func NewService(cfg *config.Config) (service Service, err error) {
 	// Добавить свагер
 	// Добавить роутер
-	// postrgresClient, err := postrgres.NewClient(
-	// 	postrgres.PostgresConfig{
-	// 		Host:     cfg.PostgresSQL.Host,
-	// 		Port:     cfg.PostgresSQL.Port,
-	// 		Username: cfg.PostgresSQL.Username,
-	// 		Password: cfg.PostgresSQL.Password,
-	// 		DBName:   cfg.PostgresSQL.DBName,
-	// 		SSLMode:  cfg.PostgresSQL.SSLMode,
-	// 	})
-	// if err != nil {
-	// 	return service, err
-	// }
+	postrgresClient, err := postrgres.NewClient(
+		postrgres.PostgresConfig{
+			Host:     cfg.PostgresSQL.Host,
+			Port:     cfg.PostgresSQL.Port,
+			Username: cfg.PostgresSQL.Username,
+			Password: cfg.PostgresSQL.Password,
+			DBName:   cfg.PostgresSQL.DBName,
+			SSLMode:  cfg.PostgresSQL.SSLMode,
+		})
+	if err != nil {
+		return service, err
+	}
 	return Service{
-		cfg: cfg,
-		// postgresClient: postrgresClient,
+		cfg:            cfg,
+		postgresClient: postrgresClient,
 	}, nil
 }
 
 func (s *Service) Run() error {
-	// работа с внешним апи
+	s.connectExternalService()
 	// запуск htttp
-	s.startHTTP()
+	// s.startHTTP()
 	return nil
+}
+
+func (s *Service) connectExternalService() {
+	openWeatherApi := openweather.NewOpenWeatherApi(s.cfg.WeatherAPI.Limit, s.cfg.WeatherAPI.Key, s.cfg.WeatherAPI.Units)
+	postgres := postgressql.NewWeatherServiceStorage(s.postgresClient)
+	useCase := usercase.NewWeatherServiceUseCase(postgres)
+	x := externalservice.NewOpenWeatherApi(openWeatherApi, useCase)
+	x.SetCities()
 }
 
 func (s *Service) startHTTP() {

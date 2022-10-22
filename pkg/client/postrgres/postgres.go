@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/jmoiron/sqlx"
+	_ "github.com/lib/pq"
 )
 
 type PostgresConfig struct {
@@ -21,7 +22,8 @@ func NewClient(cfg PostgresConfig) (*sqlx.DB, error) {
 	if err != nil {
 		return nil, err
 	}
-	if err = db.Ping(); err != nil {
+	err = db.Ping()
+	if err != nil {
 		return nil, err
 	}
 	return db, nil
