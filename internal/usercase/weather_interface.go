@@ -6,8 +6,8 @@ import (
 )
 
 type WeatherService interface {
-	CreateCity(city entities.City) (id int, err error)
-	CreateWeather(weather entities.Weather, cityId int, info []byte) (id int, err error)
+	CreateCities() error
+	CreateWeathers() error
 }
 
 type WeatherAPI interface {

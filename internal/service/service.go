@@ -57,9 +57,9 @@ func (s *Service) connectExternalService() {
 	logrus.Info("Initializing service storage interface")
 	postgres := postgressql.NewWeatherServiceStorage(s.postgresClient)
 	logrus.Info("Initializing openWeatherApi service use case")
-	useCase := usercase.NewWeatherServiceUseCase(postgres)
+	useCase := usercase.NewWeatherServiceUseCase(postgres, openWeatherApi)
 	logrus.Info("Adding cities in db")
-	weatherService := externalservice.NewOpenWeatherApi(openWeatherApi, useCase)
+	weatherService := externalservice.NewOpenWeatherApi(useCase)
 	if err := weatherService.CreateCities(); err != nil {
 		logrus.Error(err)
 	}
