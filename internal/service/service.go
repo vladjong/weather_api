@@ -24,8 +24,7 @@ type Service struct {
 }
 
 func NewService(cfg *config.Config) (service Service, err error) {
-	// Добавить свагер
-	postrgresClient, err := postrgres.NewClient(
+	postgresClient, err := postrgres.NewClient(
 		postrgres.PostgresConfig{
 			Host:     cfg.PostgresSQL.Host,
 			Port:     cfg.PostgresSQL.Port,
@@ -37,10 +36,9 @@ func NewService(cfg *config.Config) (service Service, err error) {
 	if err != nil {
 		return service, err
 	}
-
 	return Service{
 		cfg:            cfg,
-		postgresClient: postrgresClient,
+		postgresClient: postgresClient,
 	}, nil
 }
 
@@ -54,16 +52,12 @@ func (s *Service) Run() error {
 func (s *Service) connectExternalService() {
 	logrus.Info("Initializing openWeatherApi")
 	openWeatherApi := openweather.NewOpenWeatherApi(s.cfg.WeatherAPI.Limit, os.Getenv("API_KEY"), s.cfg.WeatherAPI.Units)
-	logrus.Info("Initializing service storage interface")
 	postgres := postgressql.NewWeatherServiceStorage(s.postgresClient)
-	logrus.Info("Initializing openWeatherApi service use case")
 	useCase := usercase.NewWeatherServiceUseCase(postgres, openWeatherApi)
-	logrus.Info("Adding cities in db")
 	weatherService := externalservice.NewOpenWeatherApi(useCase)
 	if err := weatherService.CreateCities(); err != nil {
 		logrus.Error(err)
 	}
-	logrus.Info("Adding weathers in db")
 	if err := weatherService.CreateWeathers(); err != nil {
 		logrus.Error(err)
 	}
@@ -72,11 +66,8 @@ func (s *Service) connectExternalService() {
 func (s *Service) startHTTP() {
 	logrus.Info("HTTP Server initializing")
 	server := new(server.Server)
-	logrus.Info("Initializing service storage interface")
 	postgres := postgressql.NewWeatherServiceStorage(s.postgresClient)
-	logrus.Info("Initializing weather api use case")
 	useCase := usercase.NewWeatherApiUseCase(postgres)
-	logrus.Info("Initializing handlers")
 	handlers := v1.NewHandler(useCase)
 	go func() {
 		if err := server.Run(s.cfg.Listen.Port, handlers.NewRouter()); err != nil {
