@@ -20,10 +20,11 @@ func (h *Handler) NewRouter() *gin.Engine {
 	router := gin.New()
 	// router.GET("/swagger/*any", ginSwagger.WrapHandler(swag))
 
-	api := router.Group("/api")
+	api := router.Group("/v1")
 	{
 		api.GET("/cities", h.GetCities)
-		api.GET("/city/:name", h.GetWeatherInCity)
+		api.GET("/cities/:name", h.GetWeatherInCity)
+		api.GET("/detail_weather/:name/:date", h.GetDetaiWeatherInCity)
 	}
 	return router
 }

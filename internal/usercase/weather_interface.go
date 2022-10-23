@@ -11,6 +11,6 @@ type WeatherService interface {
 
 type WeatherAPI interface {
 	GetCities() (names []string, err error)
-	GetWeatherInCity(name string) (entities.WeatherPredictDTO, error)
+	GetWeatherInCity(name string) (entities.WeatherPredict, error)
 	GetDetaiWeatherInCity(name string, date string) (entities.WeatherDetails, error)
 }

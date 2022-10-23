@@ -1,6 +1,8 @@
 package usercase
 
 import (
+	"fmt"
+	"time"
 	postgressql "weather_api/internal/adapters/db/postgres_sql"
 	"weather_api/internal/entities"
 )
@@ -17,23 +19,27 @@ func (w *weatherApiUseCase) GetCities() (names []string, err error) {
 	return w.storage.GetCities()
 }
 
-func (w *weatherApiUseCase) GetWeatherInCity(name string) (entities.WeatherPredictDTO, error) {
-	weather, err := w.storage.GetWeatherInCity(name)
-	dates := weather.Dates
-	var datesStr []string
-	for _, date := range dates {
-		str := string(date)
-		// str = strings.ReplaceAll(str, "/", "")
-		datesStr = append(datesStr, str)
+func (w *weatherApiUseCase) GetWeatherInCity(name string) (weather entities.WeatherPredict, err error) {
+	weathers, err := w.storage.GetWeatherInCity(name)
+	if err != nil {
+		return weather, err
 	}
-	return entities.WeatherPredictDTO{
-		Country: weather.Country,
-		Name:    weather.Name,
-		AvTemp:  weather.AvTemp,
-		Dates:   datesStr,
-	}, err
+	if len(weathers) != 1 {
+		return weather, fmt.Errorf("error: not found data")
+	}
+	dates, err := w.storage.GetDatesInCity(name)
+	weathers[0].Dates = dates
+	return weathers[0], err
 }
 
-func (w *weatherApiUseCase) GetDetaiWeatherInCity(name string, date string) (entities.WeatherDetails, error) {
-	return w.storage.GetDetaiWeatherInCity(name, date)
+func (w *weatherApiUseCase) GetDetaiWeatherInCity(name string, date string) (weather entities.WeatherDetails, err error) {
+	dateTime, err := time.Parse(time.RFC3339, date)
+	if err != nil {
+		return weather, err
+	}
+	weathers, err := w.storage.GetDetaiWeatherInCity(name, dateTime)
+	if len(weathers) != 1 {
+		return weather, fmt.Errorf("error: not found data")
+	}
+	return weathers[0], err
 }

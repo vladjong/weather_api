@@ -26,4 +26,13 @@ func (h *Handler) GetWeatherInCity(c *gin.Context) {
 	c.JSON(http.StatusOK, weathers)
 }
 
-func (h *Handler) GetDetaiWeatherInCity(c *gin.Context) {}
+func (h *Handler) GetDetaiWeatherInCity(c *gin.Context) {
+	name := c.Param("name")
+	date := c.Param("date")
+	weathers, err := h.weatherUseCase.GetDetaiWeatherInCity(name, date)
+	if err != nil {
+		logrus.Fatal(err)
+		return
+	}
+	c.JSON(http.StatusOK, weathers)
+}

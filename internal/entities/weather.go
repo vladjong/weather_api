@@ -1,5 +1,13 @@
 package entities
 
+import (
+	"database/sql/driver"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"time"
+)
+
 type ListWeather struct {
 	List        []Weather `json:"list"`
 	WeatherCity City      `json:"city"`
@@ -40,22 +48,31 @@ type Info struct {
 }
 
 type WeatherPredict struct {
-	Country string  `json:"country" db:"country"`
-	Name    string  `json:"name" db:"name"`
-	AvTemp  float64 `json:"av_temp" db:"av_temp"`
-	Dates   []uint8 `json:"dates" db:"dates"`
-}
-
-type WeatherPredictDTO struct {
-	Country string   `json:"country" db:"country"`
-	Name    string   `json:"name" db:"name"`
-	AvTemp  float64  `json:"av_temp" db:"av_temp"`
-	Dates   []string `json:"dates" db:"dates"`
+	Country string      `json:"country" db:"country"`
+	Name    string      `json:"name" db:"name"`
+	AvTemp  float64     `json:"av_temp" db:"av_temp"`
+	Dates   []time.Time `json:"dates" db:"dates"`
 }
 
 type WeatherDetails struct {
-	CityID int     `json:"city_id" db:"city_id"`
-	Temp   float64 `json:"temp" db:"temp"`
-	Date   string  `json:"date" db:"date"`
-	Info   Info    `json:"info" db:"info"`
+	Name string `json:"name" db:"name"`
+	Date string `json:"date" db:"date"`
+	Info Info   `json:"info" db:"info"`
+}
+
+func (w *Info) Scan(val interface{}) error {
+	switch v := val.(type) {
+	case []byte:
+		json.Unmarshal(v, &w)
+		return nil
+	case string:
+		json.Unmarshal([]byte(v), &w)
+	default:
+		return errors.New(fmt.Sprintf("Unsupported type: %T", v))
+	}
+	return nil
+}
+
+func (w *Info) Value() (driver.Value, error) {
+	return json.Marshal(&w)
 }
