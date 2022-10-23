@@ -37,6 +37,7 @@ func NewService(cfg *config.Config) (service Service, err error) {
 	if err != nil {
 		return service, err
 	}
+
 	return Service{
 		cfg:            cfg,
 		postgresClient: postrgresClient,
@@ -44,32 +45,42 @@ func NewService(cfg *config.Config) (service Service, err error) {
 }
 
 func (s *Service) Run() error {
+	logrus.Info("Initializing openWeatherApi service storage interface")
 	s.connectExternalService()
-	// запуск htttp
 	s.startHTTP()
 	return nil
 }
 
 func (s *Service) connectExternalService() {
+	logrus.Info("Initializing openWeatherApi")
 	openWeatherApi := openweather.NewOpenWeatherApi(s.cfg.WeatherAPI.Limit, s.cfg.WeatherAPI.Key, s.cfg.WeatherAPI.Units)
+	logrus.Info("Initializing service storage interface")
 	postgres := postgressql.NewWeatherServiceStorage(s.postgresClient)
+	logrus.Info("Initializing openWeatherApi service use case")
 	useCase := usercase.NewWeatherServiceUseCase(postgres)
+	logrus.Info("Adding cities in db")
 	weatherService := externalservice.NewOpenWeatherApi(openWeatherApi, useCase)
 	if err := weatherService.CreateCities(); err != nil {
-		logrus.Fatal(err)
+		logrus.Error(err)
 	}
-	weatherService.CreateWeathers()
+	logrus.Info("Adding weathers in db")
+	if err := weatherService.CreateWeathers(); err != nil {
+		logrus.Error(err)
+	}
 }
 
 func (s *Service) startHTTP() {
 	logrus.Info("HTTP Server initializing")
 	server := new(server.Server)
+	logrus.Info("Initializing service storage interface")
 	postgres := postgressql.NewWeatherServiceStorage(s.postgresClient)
+	logrus.Info("Initializing weather api use case")
 	useCase := usercase.NewWeatherApiUseCase(postgres)
+	logrus.Info("Initializing handlers")
 	handlers := v1.NewHandler(useCase)
 	go func() {
 		if err := server.Run(s.cfg.Listen.Port, handlers.NewRouter()); err != nil {
-			logrus.Fatalf("Error: occured while running HTTP Server: %s", err.Error)
+			logrus.Fatalf("error: occured while running HTTP Server: %s", err.Error)
 		}
 	}()
 	logrus.Info("HTTP Server start")
@@ -78,9 +89,9 @@ func (s *Service) startHTTP() {
 	<-quit
 	logrus.Info("HTTP Server Shutdown")
 	if err := server.Shutdown(context.Background()); err != nil {
-		logrus.Errorf("Error: occured on server shutdown: %s", err.Error())
+		logrus.Errorf("error: occured on server shutdown: %s", err.Error())
 	}
 	if err := s.postgresClient.Close(); err != nil {
-		logrus.Errorf("Error: occured on db connection close: %s", err.Error())
+		logrus.Errorf("error: occured on db connection close: %s", err.Error())
 	}
 }

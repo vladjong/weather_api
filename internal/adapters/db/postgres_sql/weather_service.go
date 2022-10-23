@@ -7,7 +7,6 @@ import (
 	"weather_api/internal/entities"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/sirupsen/logrus"
 )
 
 type weatherServiceStorage struct {
@@ -40,7 +39,6 @@ func (w *weatherServiceStorage) CreateWeather(weather entities.Weather, cityId i
 							RETURNING id`, config.WeathersTable, config.ConstraintWeather)
 	row := w.db.QueryRow(query, cityId, weather.Main.Temp, weather.Date, info)
 	if err := row.Scan(&id); err != nil {
-		logrus.Fatal(err)
 		return 0, err
 	}
 	return id, nil

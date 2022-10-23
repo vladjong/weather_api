@@ -35,13 +35,14 @@ func (o *openWeatherApi) CreateCities() error {
 	return nil
 }
 
-func (o *openWeatherApi) CreateWeathers() {
+func (o *openWeatherApi) CreateWeathers() (err error) {
 	weathers := o.weatherService.GetWeatherLists(o.cities)
 	for _, listWeather := range weathers {
 		for _, weather := range listWeather.List {
-			o.weatherUseCase.CreateWeather(weather, listWeather.WeatherCity.ID, o.getJson(weather))
+			_, err = o.weatherUseCase.CreateWeather(weather, listWeather.WeatherCity.ID, o.getJson(weather))
 		}
 	}
+	return err
 }
 
 func (o *openWeatherApi) getJson(weather entities.Weather) []byte {
