@@ -7,3 +7,7 @@ type City struct {
 	Lon     float64 `json:"lon" db:"lon"`
 	Country string  `json:"country" db:"country"`
 }
+
+type AllCities struct {
+	Cities []string `json:"data"`
+}

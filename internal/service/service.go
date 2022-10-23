@@ -30,7 +30,7 @@ func NewService(cfg *config.Config) (service Service, err error) {
 			Host:     cfg.PostgresSQL.Host,
 			Port:     cfg.PostgresSQL.Port,
 			Username: cfg.PostgresSQL.Username,
-			Password: cfg.PostgresSQL.Password,
+			Password: os.Getenv("DB_PASSWORD"),
 			DBName:   cfg.PostgresSQL.DBName,
 			SSLMode:  cfg.PostgresSQL.SSLMode,
 		})
@@ -53,7 +53,7 @@ func (s *Service) Run() error {
 
 func (s *Service) connectExternalService() {
 	logrus.Info("Initializing openWeatherApi")
-	openWeatherApi := openweather.NewOpenWeatherApi(s.cfg.WeatherAPI.Limit, s.cfg.WeatherAPI.Key, s.cfg.WeatherAPI.Units)
+	openWeatherApi := openweather.NewOpenWeatherApi(s.cfg.WeatherAPI.Limit, os.Getenv("API_KEY"), s.cfg.WeatherAPI.Units)
 	logrus.Info("Initializing service storage interface")
 	postgres := postgressql.NewWeatherServiceStorage(s.postgresClient)
 	logrus.Info("Initializing openWeatherApi service use case")

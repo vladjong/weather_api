@@ -1,0 +1,164 @@
+basePath: /api/v1
+definitions:
+  entities.AllCities:
+    properties:
+      data:
+        items:
+          type: string
+        type: array
+    type: object
+  entities.Info:
+    properties:
+      clouds:
+        additionalProperties:
+          type: number
+        type: object
+      infoWeather:
+        items:
+          $ref: '#/definitions/entities.InfoWeather'
+        type: array
+      main:
+        $ref: '#/definitions/entities.Main'
+      visibility:
+        type: number
+      wind:
+        additionalProperties:
+          type: number
+        type: object
+    type: object
+  entities.InfoWeather:
+    properties:
+      description:
+        type: string
+      main:
+        type: string
+    type: object
+  entities.Main:
+    properties:
+      feels_like:
+        type: number
+      grind_level:
+        type: number
+      humidity:
+        type: number
+      pressure:
+        type: number
+      sea_level:
+        type: number
+      temp:
+        type: number
+      temp_kf:
+        type: number
+      temp_map:
+        type: number
+      temp_min:
+        type: number
+    type: object
+  entities.WeatherDetails:
+    properties:
+      date:
+        type: string
+      info:
+        $ref: '#/definitions/entities.Info'
+      name:
+        type: string
+    type: object
+  entities.WeatherPredict:
+    properties:
+      av_temp:
+        type: number
+      country:
+        type: string
+      dates:
+        items:
+          type: string
+        type: array
+      name:
+        type: string
+    type: object
+  v1.errorResponse:
+    properties:
+      message:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: This is a service that predicts the weather
+  title: Weather API
+  version: "1.0"
+paths:
+  /cities:
+    get:
+      consumes:
+      - application/json
+      description: get all cities
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entities.AllCities'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/v1.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/v1.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/v1.errorResponse'
+      summary: Get Cities
+      tags:
+      - weather
+  /cities/{name}:
+    get:
+      consumes:
+      - application/json
+      description: get string by NANE
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entities.WeatherPredict'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/v1.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/v1.errorResponse'
+      summary: Get prediction weather in City
+      tags:
+      - weather
+  /detail_weather/{name}/{date}:
+    get:
+      consumes:
+      - application/json
+      description: get STRING by NAME and DATE (YYYY-MM-DDTHH:MM:SSZ)
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entities.WeatherDetails'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/v1.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/v1.errorResponse'
+      summary: Get all information about the weather in the city on the exact day
+      tags:
+      - weather
+swagger: "2.0"

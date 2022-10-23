@@ -1,6 +1,7 @@
 package usercase
 
 import (
+	"time"
 	"weather_api/internal/entities"
 )
 
@@ -10,7 +11,7 @@ type WeatherService interface {
 }
 
 type WeatherAPI interface {
-	GetCities() (names []string, err error)
+	GetCities() (names entities.AllCities, err error)
 	GetWeatherInCity(name string) (entities.WeatherPredict, error)
-	GetDetaiWeatherInCity(name string, date string) (entities.WeatherDetails, error)
+	GetDetaiWeatherInCity(name string, date time.Time) (entities.WeatherDetails, error)
 }
