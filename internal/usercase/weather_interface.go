@@ -5,6 +5,8 @@ import (
 	"weather_api/internal/entities"
 )
 
+//go:generate mockgen -source=weather_interface.go -destination=moks/mock.go
+
 type WeatherService interface {
 	CreateCities() error
 	CreateWeathers() error

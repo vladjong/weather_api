@@ -8,10 +8,10 @@ import (
 )
 
 type weatherApiUseCase struct {
-	storage postgressql.WeatherStorageApi
+	storage postgressql.WeatherStorage
 }
 
-func NewWeatherApiUseCase(storage postgressql.WeatherStorageApi) *weatherApiUseCase {
+func NewWeatherApiUseCase(storage postgressql.WeatherStorage) *weatherApiUseCase {
 	return &weatherApiUseCase{storage: storage}
 }
 
