@@ -41,7 +41,12 @@ func (w *weatherServiceUseCase) CreateWeathers() error {
 			if err != nil {
 				return err
 			}
-			_, err = w.storage.CreateWeather(weather, listWeather.WeatherCity.ID, json)
+			_, err = w.storage.CreateWeather(entities.WeatherCreate{
+				CityId: listWeather.WeatherCity.ID,
+				Temp:   weather.Main.Temp,
+				Date:   weather.Date,
+				Info:   json,
+			})
 			if err != nil {
 				return err
 			}

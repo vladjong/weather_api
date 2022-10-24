@@ -3,7 +3,6 @@ package entities
 import (
 	"database/sql/driver"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"time"
 )
@@ -47,6 +46,13 @@ type Info struct {
 	Visibility  float64
 }
 
+type WeatherCreate struct {
+	CityId int     `json:"city_id" db:"city_id"`
+	Temp   float64 `json:"temp" db:"temp"`
+	Date   string  `json:"date" db:"date"`
+	Info   []byte  `json:"info" db:"info"`
+}
+
 type WeatherPredict struct {
 	Country string      `json:"country" db:"country"`
 	Name    string      `json:"name" db:"name"`
@@ -68,7 +74,7 @@ func (w *Info) Scan(val interface{}) error {
 	case string:
 		json.Unmarshal([]byte(v), &w)
 	default:
-		return errors.New(fmt.Sprintf("Unsupported type: %T", v))
+		return fmt.Errorf("unsupported type: %T", v)
 	}
 	return nil
 }
