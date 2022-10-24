@@ -21,5 +21,7 @@ func main() {
 	if err != nil {
 		logrus.Fatal(err)
 	}
-	service.Run()
+	if err := service.Run(); err != nil {
+		logrus.Fatal(err)
+	}
 }

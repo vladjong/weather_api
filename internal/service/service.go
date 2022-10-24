@@ -71,7 +71,7 @@ func (s *Service) startHTTP() {
 	handlers := v1.NewHandler(useCase)
 	go func() {
 		if err := server.Run(s.cfg.Listen.Port, handlers.NewRouter()); err != nil {
-			logrus.Fatalf("error: occured while running HTTP Server: %s", err.Error)
+			logrus.Fatalf("error: occured while running HTTP Server: %s", err.Error())
 		}
 	}()
 	logrus.Info("HTTP Server start")

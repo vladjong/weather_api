@@ -69,14 +69,18 @@ type WeatherDetails struct {
 func (w *Info) Scan(val interface{}) error {
 	switch v := val.(type) {
 	case []byte:
-		json.Unmarshal(v, &w)
+		if err := json.Unmarshal(v, &w); err != nil {
+			return err
+		}
 		return nil
 	case string:
-		json.Unmarshal([]byte(v), &w)
+		if err := json.Unmarshal([]byte(v), &w); err != nil {
+			return err
+		}
+		return nil
 	default:
 		return fmt.Errorf("unsupported type: %T", v)
 	}
-	return nil
 }
 
 func (w *Info) Value() (driver.Value, error) {

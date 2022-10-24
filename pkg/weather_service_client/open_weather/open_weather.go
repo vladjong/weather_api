@@ -3,7 +3,7 @@ package openweather
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"weather_api/config"
 	"weather_api/internal/entities"
@@ -53,7 +53,7 @@ func (o *openWeatherApi) getWeatherListStruct(id int, lat, lon float64) (listWea
 	if err != nil {
 		logrus.Fatal(err)
 	}
-	jsonBytes, err := ioutil.ReadAll(response.Body)
+	jsonBytes, err := io.ReadAll(response.Body)
 	if err != nil {
 		logrus.Fatal(err)
 	}
@@ -76,7 +76,7 @@ func (o *openWeatherApi) getCityStruct(name string) entities.City {
 	if err != nil {
 		logrus.Fatal(err)
 	}
-	jsonBytes, err := ioutil.ReadAll(response.Body)
+	jsonBytes, err := io.ReadAll(response.Body)
 	if err != nil {
 		logrus.Fatal(err)
 	}

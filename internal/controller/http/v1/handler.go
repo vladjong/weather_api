@@ -1,14 +1,12 @@
 package v1
 
 import (
+	_ "weather_api/docs"
 	"weather_api/internal/usercase"
 
-	_ "weather_api/docs"
-
+	"github.com/gin-gonic/gin"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
-
-	"github.com/gin-gonic/gin"
 )
 
 type Handler struct {
