@@ -61,3 +61,5 @@ $ make lint - запуска линтера
 ```
 http://localhost:8080/swagger/index.html#/
 ```
+
+## Спасибо
