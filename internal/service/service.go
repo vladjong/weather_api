@@ -29,7 +29,7 @@ func NewService(cfg *config.Config) (service Service, err error) {
 			Host:     cfg.PostgresSQL.Host,
 			Port:     cfg.PostgresSQL.Port,
 			Username: cfg.PostgresSQL.Username,
-			Password: os.Getenv("DB_PASSWORD"),
+			Password: os.Getenv("POSTGRES_PASSWORD"),
 			DBName:   cfg.PostgresSQL.DBName,
 			SSLMode:  cfg.PostgresSQL.SSLMode,
 		})

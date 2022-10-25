@@ -16,8 +16,8 @@ type Config struct {
 		Units string `env:"UNITS" env-default:"metric"`
 	}
 	PostgresSQL struct {
-		Host     string `env:"HOST" env-default:"localhost"`
-		Port     string `env:"PORT" env-default:"5436"`
+		Host     string `env:"HOST" env-default:"db"`
+		Port     string `env:"PORT" env-default:"5432"`
 		Username string `env:"USERNAME" env-default:"postgres"`
 		DBName   string `env:"DBNAME" env-default:"postgres"`
 		SSLMode  string `env:"SSLMODE" env-default:"disable"`

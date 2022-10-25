@@ -22,17 +22,11 @@ clean:
 test:
 	go test ./...
 
-run:
-	go run ${PACKAGE}
-
 generate: install-mockgen
 	${MOCKGEN} -source=internal/model/messages/incoming_msg.go -destination=internal/mocks/messages/messages_mocks.go
 
 lint: install-lint
 	${LINTBIN} run
-
-precommit: format build test lint
-	echo "OK"
 
 bindir:
 	mkdir -p ${BINDIR}
@@ -55,8 +49,5 @@ install-smartimports: bindir
 		(GOBIN=${BINDIR} go install github.com/pav5000/smartimports/cmd/smartimports@latest && \
 		mv ${BINDIR}/smartimports ${SMARTIMPORTS})
 
-# docker-run:
-# 	docker compose --env-file ./data/.env.dev up --build
-
-# docker-sudo:
-# 	sudo docker compose --env-file ./data/.env.dev up --build
+docker-run:
+	docker compose --env-file .env up --build
