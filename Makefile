@@ -8,22 +8,13 @@ SMARTIMPORTS=${BINDIR}/smartimports_${GOVER}
 LINTVER=v1.49.0
 LINTBIN=${BINDIR}/lint_${GOVER}_${LINTVER}
 
-all: format test lint build
-
-build: clean $(APP_BIN)
-
-$(APP_BIN):
-	go build -o $(APP_BIN) cmd/main.go
-	./build/app
-
-clean:
-	rm -rf build || true
+all: docker-run
 
 test:
 	go test ./...
 
 generate: install-mockgen
-	${MOCKGEN} -source=internal/model/messages/incoming_msg.go -destination=internal/mocks/messages/messages_mocks.go
+	${MOCKGEN} -source=internal/usercase/weather_interface.go -destination=internal/usercase/mocks/mocks.go
 
 lint: install-lint
 	${LINTBIN} run

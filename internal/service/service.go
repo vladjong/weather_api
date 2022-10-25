@@ -66,7 +66,7 @@ func (s *Service) connectExternalService() {
 func (s *Service) startHTTP() {
 	logrus.Info("HTTP Server initializing")
 	server := new(server.Server)
-	postgres := postgressql.NewWeatherServiceStorage(s.postgresClient)
+	postgres := postgressql.NewWeatherServiceStorageAPI(s.postgresClient)
 	useCase := usercase.NewWeatherApiUseCase(postgres)
 	handlers := v1.NewHandler(useCase)
 	go func() {

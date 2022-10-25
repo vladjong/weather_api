@@ -8,18 +8,15 @@ import (
 )
 
 type weatherApiUseCase struct {
-	storage postgressql.WeatherStorage
+	storage postgressql.WeatherStorageAPI
 }
 
-func NewWeatherApiUseCase(storage postgressql.WeatherStorage) *weatherApiUseCase {
+func NewWeatherApiUseCase(storage postgressql.WeatherStorageAPI) *weatherApiUseCase {
 	return &weatherApiUseCase{storage: storage}
 }
 
 func (w *weatherApiUseCase) GetCities() (names entities.AllCities, err error) {
-	cities, err := w.storage.GetCities()
-	return entities.AllCities{
-		Cities: cities,
-	}, err
+	return w.storage.GetCities()
 }
 
 func (w *weatherApiUseCase) GetWeatherInCity(name string) (weather entities.WeatherPredict, err error) {

@@ -2,7 +2,6 @@ package postgressql
 
 import (
 	"fmt"
-	"time"
 	"weather_api/config"
 	"weather_api/internal/entities"
 
@@ -42,51 +41,4 @@ func (w *weatherServiceStorage) CreateWeather(weather entities.WeatherCreate) (i
 		return 0, err
 	}
 	return id, nil
-}
-
-func (w *weatherServiceStorage) GetCities() (names []string, err error) {
-	query := fmt.Sprintf(`SELECT DISTINCT c.name
-							FROM %s AS w
-							JOIN %s AS c ON w.city_id = c.id
-							ORDER BY 1`, config.WeathersTable, config.CitiesTable)
-	if err := w.db.Select(&names, query); err != nil {
-		return nil, err
-	}
-	return names, nil
-}
-
-func (w *weatherServiceStorage) GetWeatherInCity(name string) (weathers []entities.WeatherPredict, err error) {
-	query := fmt.Sprintf(`SELECT c.country, c.name, AVG(w.temp) AS av_temp
-							FROM %s AS w
-							JOIN %s AS c ON w.city_id = c.id
-							WHERE c.name = $1
-							GROUP BY c.country, c.name`, config.WeathersTable, config.CitiesTable)
-	if err := w.db.Select(&weathers, query, name); err != nil {
-		return weathers, err
-	}
-	return weathers, nil
-}
-
-func (w *weatherServiceStorage) GetDatesInCity(name string) (dates []time.Time, err error) {
-	query := fmt.Sprintf(`SELECT w.date
-							FROM %s AS w
-							JOIN %s AS c ON w.city_id = c.id
-							WHERE c.name = $1
-							ORDER BY 1`, config.WeathersTable, config.CitiesTable)
-	if err := w.db.Select(&dates, query, name); err != nil {
-		return dates, err
-	}
-	return dates, err
-}
-
-func (w *weatherServiceStorage) GetDetaiWeatherInCity(name string, date time.Time) (weathers []entities.WeatherDetails, err error) {
-	query := fmt.Sprintf(`SELECT c.name, w.date, w.info::text
-							FROM %s AS w
-							JOIN %s AS c ON w.city_id = c.id
-							WHERE c.name = $1 AND w.date = $2
-							ORDER BY 1`, config.WeathersTable, config.CitiesTable)
-	if err := w.db.Select(&weathers, query, name, date); err != nil {
-		return weathers, err
-	}
-	return weathers, nil
 }
