@@ -24,16 +24,15 @@ CREATE TABLE Users
     password_hash VARCHAR(30) NOT NULL
 );
 
-CREATE TABLE Users_lists
+CREATE TABLE User_lists
 (
     id SERIAL PRIMARY KEY,
     user_id INT REFERENCES Cities (id) ON DELETE CASCADE NOT NULL,
-    list_id INT REFERENCES Lists (id) ON DELETE CASCADE NOT NULL
+    like_list_id INT REFERENCES LikeLists (id) ON DELETE CASCADE NOT NULL
 );
 
-CREATE TABLE Lists
+CREATE TABLE LikeLists
 (
     id SERIAL PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
     city_id INT REFERENCES Cities (id) NOT NULL
 );
