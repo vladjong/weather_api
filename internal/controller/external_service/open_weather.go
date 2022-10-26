@@ -1,7 +1,7 @@
 package externalservice
 
 import (
-	"weather_api/internal/usercase"
+	usercase "weather_api/internal/usercase/weather"
 )
 
 type openWeatherApi struct {

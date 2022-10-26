@@ -2,7 +2,7 @@ package v1
 
 import (
 	_ "weather_api/docs"
-	"weather_api/internal/usercase"
+	usercase "weather_api/internal/usercase/weather"
 
 	"github.com/gin-gonic/gin"
 	swaggerfiles "github.com/swaggo/files"

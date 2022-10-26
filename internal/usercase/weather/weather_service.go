@@ -2,7 +2,7 @@ package usercase
 
 import (
 	"encoding/json"
-	postgressql "weather_api/internal/adapters/db/postgres_sql"
+	postgressql "weather_api/internal/adapters/db/postgres_sql/weather"
 	"weather_api/internal/entities"
 	weatherserviceclient "weather_api/pkg/weather_service_client"
 )

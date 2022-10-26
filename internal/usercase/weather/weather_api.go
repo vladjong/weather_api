@@ -3,7 +3,7 @@ package usercase
 import (
 	"fmt"
 	"time"
-	postgressql "weather_api/internal/adapters/db/postgres_sql"
+	postgressql "weather_api/internal/adapters/db/postgres_sql/weather"
 	"weather_api/internal/entities"
 )
 
