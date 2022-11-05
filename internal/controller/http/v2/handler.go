@@ -12,12 +12,14 @@ import (
 type Handler struct {
 	weatherUseCase usecase.WeatherAPI
 	userUseCase    usecase.Authorization
+	listUseCase    usecase.List
 }
 
-func NewHandler(weatherUseCase usecase.WeatherAPI, userUseCase usecase.Authorization) *Handler {
+func NewHandler(weatherUseCase usecase.WeatherAPI, userUseCase usecase.Authorization, listUseCase usecase.List) *Handler {
 	return &Handler{
 		weatherUseCase: weatherUseCase,
 		userUseCase:    userUseCase,
+		listUseCase:    listUseCase,
 	}
 }
 
@@ -47,7 +49,13 @@ func (h *Handler) NewRouter() *gin.Engine {
 			lists.GET("/:id", h.GetListById)
 			lists.GET("/", h.GetAllList)
 			lists.PUT("/:id", h.UpdateList)
-			lists.DELETE("/:id", h.DeleteList)
+			lists.DELETE("/:title", h.DeleteList)
+
+			items := lists.Group(":id/items")
+			{
+				items.POST("/")
+				items.GET("/")
+			}
 		}
 	}
 	return router

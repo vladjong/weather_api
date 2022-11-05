@@ -6,17 +6,17 @@ import (
 	"fmt"
 	"time"
 	"weather_api/config"
-	postgressql "weather_api/internal/adapters/db/postgres_sql"
+	"weather_api/internal/adapters/db"
 	"weather_api/internal/entities"
 
 	"github.com/golang-jwt/jwt"
 )
 
 type authorizationUseCase struct {
-	storage postgressql.AuthorizationStorage
+	storage db.AuthorizationStorage
 }
 
-func NewAuthorizationUseCase(storage postgressql.AuthorizationStorage) *authorizationUseCase {
+func NewAuthorizationUseCase(storage db.AuthorizationStorage) *authorizationUseCase {
 	return &authorizationUseCase{
 		storage: storage,
 	}

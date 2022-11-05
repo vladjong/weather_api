@@ -68,9 +68,11 @@ func (s *Service) startHTTP() {
 	server := new(server.Server)
 	weatherPostgres := postgressql.NewWeatherServiceStorageAPI(s.postgresClient)
 	userPostgres := postgressql.NewAuthServiceStorage(s.postgresClient)
+	listPostgres := postgressql.NewListStorage(s.postgresClient)
 	weatherUseCase := usecase.NewWeatherApiUseCase(weatherPostgres)
 	userUseCase := usecase.NewAuthorizationUseCase(userPostgres)
-	handlers := v2.NewHandler(weatherUseCase, userUseCase)
+	listUseCase := usecase.NewListUseCase(listPostgres)
+	handlers := v2.NewHandler(weatherUseCase, userUseCase, listUseCase)
 	go func() {
 		if err := server.Run(s.cfg.Listen.Port, handlers.NewRouter()); err != nil {
 			logrus.Fatalf("error: occured while running HTTP Server: %s", err.Error())

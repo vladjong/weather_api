@@ -1,10 +1,10 @@
 package config
 
 import (
-	"log"
 	"sync"
 
 	"github.com/ilyakaznacheev/cleanenv"
+	"github.com/sirupsen/logrus"
 )
 
 type Config struct {
@@ -29,13 +29,13 @@ var once sync.Once
 
 func GetConfig() *Config {
 	once.Do(func() {
-		log.Print("Read application configuration")
+		logrus.Print("Read application configuration")
 		instance = &Config{}
 		if err := cleanenv.ReadEnv(instance); err != nil {
 			helpText := "Weather_api - micro_server"
 			help, _ := cleanenv.GetDescription(instance, &helpText)
-			log.Print(help)
-			log.Fatal(err)
+			logrus.Print(help)
+			logrus.Fatal(err)
 		}
 	})
 	return instance

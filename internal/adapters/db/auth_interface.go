@@ -1,4 +1,4 @@
-package postgressql
+package db
 
 import "weather_api/internal/entities"
 

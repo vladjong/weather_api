@@ -31,6 +31,8 @@ const (
 	CitiesTable       = "Cities"
 	WeathersTable     = "Weathers"
 	UserTable         = "Users"
+	ListItemsTable    = "List_Items"
+	UserListTable     = "User_Lists"
 	ConstraintWeather = "unique_weather"
 	Salt              = "fgfertdl123wedfsdf"
 	TokenTTL          = 12 * time.Hour

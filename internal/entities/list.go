@@ -1,12 +1,13 @@
 package entities
 
-type UserLists struct {
-	Id         int `json:"-" db:"id"`
-	UserID     int `json:"user_id" db:"user_id"`
-	LikeListID int `json:"like_list_id" db:"like_list_id"`
+type UserList struct {
+	Id     int    `json:"-" db:"id"`
+	UserID int    `json:"user_id" db:"user_id"`
+	Title  string `json:"title" db:"title"`
 }
 
-type LikeLists struct {
+type ListItem struct {
 	Id     int `json:"-" db:"id"`
 	CityID int `json:"city_id" db:"city_id"`
+	ListID int `json:"list_id" db:"list_id"`
 }
