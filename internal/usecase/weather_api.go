@@ -1,9 +1,9 @@
-package usercase
+package usecase
 
 import (
 	"fmt"
 	"time"
-	postgressql "weather_api/internal/adapters/db/postgres_sql/weather"
+	postgressql "weather_api/internal/adapters/db/postgres_sql"
 	"weather_api/internal/entities"
 )
 

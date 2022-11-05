@@ -2,7 +2,7 @@ package v2
 
 import (
 	_ "weather_api/docs"
-	usercase "weather_api/internal/usercase/weather"
+	"weather_api/internal/usecase"
 
 	"github.com/gin-gonic/gin"
 	swaggerfiles "github.com/swaggo/files"
@@ -10,12 +10,14 @@ import (
 )
 
 type Handler struct {
-	weatherUseCase usercase.WeatherAPI
+	weatherUseCase usecase.WeatherAPI
+	userUseCase    usecase.Authorization
 }
 
-func NewHandler(weatherUseCase usercase.WeatherAPI) *Handler {
+func NewHandler(weatherUseCase usecase.WeatherAPI, userUseCase usecase.Authorization) *Handler {
 	return &Handler{
 		weatherUseCase: weatherUseCase,
+		userUseCase:    userUseCase,
 	}
 }
 
@@ -39,7 +41,7 @@ func (h *Handler) NewRouter() *gin.Engine {
 		api.GET("/cities/:name", h.GetWeatherInCity)
 		api.GET("/detail_weather/:name/:date", h.GetDetailWeatherInCity)
 
-		lists := api.Group("/lists")
+		lists := api.Group("/lists", h.userIdentity)
 		{
 			lists.POST("/", h.CreateList)
 			lists.GET("/:id", h.GetListById)

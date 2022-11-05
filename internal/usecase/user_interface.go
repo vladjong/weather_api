@@ -1,4 +1,4 @@
-package usercase
+package usecase
 
 import "weather_api/internal/entities"
 
@@ -6,4 +6,6 @@ import "weather_api/internal/entities"
 
 type Authorization interface {
 	CreateUser(user entities.User) (int, error)
+	GenerateToken(login, password string) (string, error)
+	ParseToken(accessToken string) (int, error)
 }

@@ -1,8 +1,8 @@
-package usercase
+package usecase
 
 import (
 	"encoding/json"
-	postgressql "weather_api/internal/adapters/db/postgres_sql/weather"
+	postgressql "weather_api/internal/adapters/db/postgres_sql"
 	"weather_api/internal/entities"
 	weatherserviceclient "weather_api/pkg/weather_service_client"
 )

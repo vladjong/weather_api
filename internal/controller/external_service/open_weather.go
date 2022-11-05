@@ -1,14 +1,14 @@
 package externalservice
 
 import (
-	usercase "weather_api/internal/usercase/weather"
+	"weather_api/internal/usecase"
 )
 
 type openWeatherApi struct {
-	weatherUseCase usercase.WeatherService
+	weatherUseCase usecase.WeatherService
 }
 
-func NewOpenWeatherApi(weatherUseCase usercase.WeatherService) *openWeatherApi {
+func NewOpenWeatherApi(weatherUseCase usecase.WeatherService) *openWeatherApi {
 	return &openWeatherApi{
 		weatherUseCase: weatherUseCase,
 	}

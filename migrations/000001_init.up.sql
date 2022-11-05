@@ -20,8 +20,14 @@ CREATE TABLE Weathers
 CREATE TABLE Users
 (
     id SERIAL PRIMARY KEY,
-    login VARCHAR(30) NOT NULL UNIQUE,
-    password_hash VARCHAR(30) NOT NULL
+    login VARCHAR(255) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE LikeLists
+(
+    id SERIAL PRIMARY KEY,
+    city_id INT REFERENCES Cities (id) NOT NULL
 );
 
 CREATE TABLE User_lists
@@ -29,10 +35,4 @@ CREATE TABLE User_lists
     id SERIAL PRIMARY KEY,
     user_id INT REFERENCES Cities (id) ON DELETE CASCADE NOT NULL,
     like_list_id INT REFERENCES LikeLists (id) ON DELETE CASCADE NOT NULL
-);
-
-CREATE TABLE LikeLists
-(
-    id SERIAL PRIMARY KEY,
-    city_id INT REFERENCES Cities (id) NOT NULL
 );
