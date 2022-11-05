@@ -34,3 +34,17 @@ func (l *listUseCase) UpdateList(userId, listId int, input entities.UserList) er
 func (l *listUseCase) DeleteList(userId int, title string) error {
 	return l.storage.DeleteList(userId, title)
 }
+
+func (l *listUseCase) CreateItem(userId, listId int, city string) (int, error) {
+	if _, err := l.storage.GetListById(userId, listId); err != nil {
+		return 0, err
+	}
+	return l.storage.CreateItem(listId, city)
+}
+
+func (l *listUseCase) GetAllItems(userId, listId int) (items []entities.Item, err error) {
+	if _, err := l.storage.GetListById(userId, listId); err != nil {
+		return items, err
+	}
+	return l.storage.GetAllItems(listId)
+}

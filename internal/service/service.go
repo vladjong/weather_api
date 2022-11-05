@@ -44,7 +44,7 @@ func NewService(cfg *config.Config) (service Service, err error) {
 
 func (s *Service) Run() error {
 	logrus.Info("Initializing openWeatherApi service storage interface")
-	// s.connectExternalService()
+	s.connectExternalService()
 	s.startHTTP()
 	return nil
 }

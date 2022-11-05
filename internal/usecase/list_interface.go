@@ -8,4 +8,6 @@ type List interface {
 	GetAllList(userId int) (lists []entities.UserList, err error)
 	UpdateList(userId, listId int, input entities.UserList) error
 	DeleteList(userId int, title string) error
+	CreateItem(userId, listId int, city string) (id int, err error)
+	GetAllItems(userId, listId int) (items []entities.Item, err error)
 }

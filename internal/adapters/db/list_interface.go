@@ -8,4 +8,6 @@ type ListStorage interface {
 	GetAllList(userId int) (lists []entities.UserList, err error)
 	UpdateList(userId, listId int, input entities.UserList) error
 	DeleteList(userId int, title string) error
+	CreateItem(listId int, city string) (id int, err error)
+	GetAllItems(listId int) (items []entities.Item, err error)
 }

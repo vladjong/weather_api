@@ -53,8 +53,8 @@ func (h *Handler) NewRouter() *gin.Engine {
 
 			items := lists.Group(":id/items")
 			{
-				items.POST("/")
-				items.GET("/")
+				items.POST("/:city", h.CreateItem)
+				items.GET("/", h.GetAllItems)
 			}
 		}
 	}

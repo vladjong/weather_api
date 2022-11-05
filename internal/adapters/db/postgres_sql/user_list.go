@@ -52,3 +52,28 @@ func (r *listStorage) DeleteList(userId int, title string) error {
 	_, err := r.db.Exec(query, userId, title)
 	return err
 }
+
+func (r *listStorage) CreateItem(listId int, city string) (id int, err error) {
+	var cityId int
+	queryCity := fmt.Sprintf("SELECT id FROM %s WHERE name = $1", config.CitiesTable)
+	if err := r.db.Get(&cityId, queryCity, city); err != nil {
+		return 0, err
+	}
+	queryIten := fmt.Sprintf("INSERT INTO %s (city_id, list_id) VALUES ($1, $2) RETURNING id", config.ListItemsTable)
+	row := r.db.QueryRow(queryIten, cityId, listId)
+	if err := row.Scan(&id); err != nil {
+		return 0, err
+	}
+	return id, nil
+}
+
+func (r *listStorage) GetAllItems(listId int) (items []entities.Item, err error) {
+	query := fmt.Sprintf(`SELECT c.name, AVG(w.temp) AS av_temp
+							FROM %s AS l
+							JOIN %s AS c ON l.city_id = c.id
+							JOIN %s AS w ON w.city_id = c.id
+							WHERE l.list_id = $1
+							GROUP BY c.name`, config.ListItemsTable, config.CitiesTable, config.WeathersTable)
+	err = r.db.Select(&items, query, listId)
+	return items, err
+}
