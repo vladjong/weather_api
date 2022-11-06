@@ -1,3 +1,5 @@
+![poster](resourcer/poster.png)
+
 # Weather_API
 
 ## Описание
