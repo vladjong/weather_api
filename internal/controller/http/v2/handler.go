@@ -24,11 +24,16 @@ func NewHandler(weatherUseCase usecase.WeatherAPI, userUseCase usecase.Authoriza
 }
 
 // @title Weather API
-// @version 1.0
+// @version 2.0
 // @description This is a service that predicts the weather
 
 // @host      localhost:8080
-// @BasePath  /api/v1
+// @BasePath  /
+
+// @securityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
+
 func (h *Handler) NewRouter() *gin.Engine {
 	router := gin.New()
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))

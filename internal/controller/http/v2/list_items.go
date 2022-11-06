@@ -7,6 +7,18 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// @Summary Create items by sity name
+// @Security ApiKeyAuth
+// @Tags items
+// @Description create items by sity name
+// @ID create-items-by-sity-name
+// @Accept  json
+// @Produce  json
+// @Success 200 {integer} 1
+// @Failure 400 {object} errorResponse
+// @Failure 404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Router /api/v2/lists/:id/items/:city [post]
 func (h *Handler) CreateItem(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
@@ -28,6 +40,18 @@ func (h *Handler) CreateItem(c *gin.Context) {
 	})
 }
 
+// @Summary Get items by list id
+// @Security ApiKeyAuth
+// @Tags items
+// @Description get items by list id
+// @ID get-items-by-list-id
+// @Accept  json
+// @Produce  json
+// @Success 200 {object} []entities.Item
+// @Failure 400 {object} errorResponse
+// @Failure 404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Router /api/v2/lists/:id/items/ [get]
 func (h *Handler) GetAllItems(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {

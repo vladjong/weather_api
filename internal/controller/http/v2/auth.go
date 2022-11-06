@@ -7,6 +7,18 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// @Summary SignUp
+// @Tags auth
+// @Description createacount
+// @ID create-account
+// @Accept  json
+// @Produce  json
+// @Param input body entities.User true "User"
+// @Success 200 {integer} integer 1
+// @Failure 400 {object} errorResponse
+// @Failure 404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Router /auth/sign-up [post]
 func (h *Handler) SignUp(c *gin.Context) {
 	var input entities.User
 	if err := c.BindJSON(&input); err != nil {
@@ -23,6 +35,18 @@ func (h *Handler) SignUp(c *gin.Context) {
 	})
 }
 
+// @Summary SignIn
+// @Tags auth
+// @Description login
+// @ID login
+// @Accept  json
+// @Produce  json
+// @Param input body entities.SignInInput true "credentials""
+// @Success 200 {string} string "token"
+// @Failure 400 {object} errorResponse
+// @Failure 404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Router /auth/sign-in [post]
 func (h *Handler) SignIn(c *gin.Context) {
 	var input entities.SignInInput
 	if err := c.BindJSON(&input); err != nil {
