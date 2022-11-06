@@ -37,6 +37,8 @@ definitions:
     properties:
       av_temp:
         type: number
+      id:
+        type: integer
       name:
         type: string
     type: object
@@ -83,6 +85,8 @@ definitions:
     type: object
   entities.UserList:
     properties:
+      id:
+        type: integer
       title:
         type: string
       user_id:
@@ -196,68 +200,6 @@ paths:
       summary: Get all lists
       tags:
       - lists
-  /api/v2/lists/:id/items/:
-    get:
-      consumes:
-      - application/json
-      description: get items by list id
-      operationId: get-items-by-list-id
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/entities.Item'
-            type: array
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/v2.errorResponse'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/v2.errorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/v2.errorResponse'
-      security:
-      - ApiKeyAuth: []
-      summary: Get items by list id
-      tags:
-      - items
-  /api/v2/lists/:id/items/:city:
-    post:
-      consumes:
-      - application/json
-      description: create items by sity name
-      operationId: create-items-by-sity-name
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            type: integer
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/v2.errorResponse'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/v2.errorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/v2.errorResponse'
-      security:
-      - ApiKeyAuth: []
-      summary: Create items by sity name
-      tags:
-      - items
   /api/v2/lists/{id}:
     get:
       consumes:
@@ -293,6 +235,13 @@ paths:
       - application/json
       description: update list by id
       operationId: update-list-by-id
+      parameters:
+      - description: list info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/entities.UserList'
       produces:
       - application/json
       responses:
@@ -317,12 +266,74 @@ paths:
       summary: Update list by id
       tags:
       - lists
-  /api/v2/lists/{title}:
+  /api/v2/lists/{id}/items/:
+    get:
+      consumes:
+      - application/json
+      description: get items by list id
+      operationId: get-items-by-list-id
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entities.Item'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/v2.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/v2.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/v2.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get items by list id
+      tags:
+      - items
+  /api/v2/lists/{id}/items/{city}:
+    post:
+      consumes:
+      - application/json
+      description: create items by sity name
+      operationId: create-items-by-sity-name
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/v2.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/v2.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/v2.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create items by sity name
+      tags:
+      - items
+  /api/v2/lists/{id}/items/{id}:
     delete:
       consumes:
       - application/json
-      description: delete list by title
-      operationId: delete-list-by-title
+      description: delete items by id
+      operationId: delete-items-by-id
       produces:
       - application/json
       responses:
@@ -344,9 +355,39 @@ paths:
             $ref: '#/definitions/v2.errorResponse'
       security:
       - ApiKeyAuth: []
-      summary: Delete list by title
+      summary: Delete items by id
       tags:
-      - lists
+      - items
+  /api/v2/lists/{title}:
+    delete:
+      consumes:
+      - application/json
+      description: delete item by id
+      operationId: delete-item-by-id
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Status
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/v2.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/v2.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/v2.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete item by id
+      tags:
+      - items
   /auth/sign-in:
     post:
       consumes:

@@ -105,6 +105,7 @@ func (h *Handler) GetAllList(c *gin.Context) {
 // @ID update-list-by-id
 // @Accept  json
 // @Produce  json
+// @Param input body entities.UserList true "list info"
 // @Success 200 {string} string "Status"
 // @Failure 400 {object} errorResponse
 // @Failure 404 {object} errorResponse
@@ -134,11 +135,11 @@ func (h *Handler) UpdateList(c *gin.Context) {
 	})
 }
 
-// @Summary Delete list by title
+// @Summary Delete item by id
 // @Security ApiKeyAuth
-// @Tags lists
-// @Description delete list by title
-// @ID delete-list-by-title
+// @Tags items
+// @Description delete item by id
+// @ID delete-item-by-id
 // @Accept  json
 // @Produce  json
 // @Success 200 {string} string "Status"
@@ -152,8 +153,11 @@ func (h *Handler) DeleteList(c *gin.Context) {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
-	title := c.Param("title")
-	if err := h.listUseCase.DeleteList(userId, title); err != nil {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		NewErrorResponse(c, http.StatusBadRequest, "invalid list id param")
+	}
+	if err := h.listUseCase.DeleteList(userId, id); err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}

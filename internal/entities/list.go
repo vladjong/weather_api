@@ -1,7 +1,7 @@
 package entities
 
 type UserList struct {
-	Id     int    `json:"-" db:"id"`
+	Id     int    `json:"id" db:"id"`
 	UserID int    `json:"user_id" db:"user_id"`
 	Title  string `json:"title" db:"title"`
 }
@@ -13,6 +13,7 @@ type ListItem struct {
 }
 
 type Item struct {
+	Id     int     `json:"id" db:"id"`
 	Name   string  `json:"name" db:"name"`
 	AvTemp float64 `json:"av_temp" db:"av_temp"`
 }

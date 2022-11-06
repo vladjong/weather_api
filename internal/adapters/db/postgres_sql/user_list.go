@@ -47,9 +47,9 @@ func (r *listStorage) UpdateList(userId, listId int, input entities.UserList) er
 	return err
 }
 
-func (r *listStorage) DeleteList(userId int, title string) error {
-	query := fmt.Sprintf("DELETE FROM %s WHERE user_id = $1 AND title = $2", config.UserListTable)
-	_, err := r.db.Exec(query, userId, title)
+func (r *listStorage) DeleteList(userId, listId int) error {
+	query := fmt.Sprintf("DELETE FROM %s WHERE user_id = $1 AND id = $2", config.UserListTable)
+	_, err := r.db.Exec(query, userId, listId)
 	return err
 }
 
@@ -68,12 +68,18 @@ func (r *listStorage) CreateItem(listId int, city string) (id int, err error) {
 }
 
 func (r *listStorage) GetAllItems(listId int) (items []entities.Item, err error) {
-	query := fmt.Sprintf(`SELECT c.name, AVG(w.temp) AS av_temp
+	query := fmt.Sprintf(`SELECT l.id, c.name, AVG(w.temp) AS av_temp
 							FROM %s AS l
 							JOIN %s AS c ON l.city_id = c.id
 							JOIN %s AS w ON w.city_id = c.id
 							WHERE l.list_id = $1
-							GROUP BY c.name`, config.ListItemsTable, config.CitiesTable, config.WeathersTable)
+							GROUP BY c.name, l.id`, config.ListItemsTable, config.CitiesTable, config.WeathersTable)
 	err = r.db.Select(&items, query, listId)
 	return items, err
+}
+
+func (r *listStorage) DeleteItems(listId, itemId int) error {
+	query := fmt.Sprintf("DELETE FROM %s WHERE list_id = $1 AND id = $2", config.ListItemsTable)
+	_, err := r.db.Exec(query, listId, itemId)
+	return err
 }

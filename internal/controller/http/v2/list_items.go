@@ -18,7 +18,7 @@ import (
 // @Failure 400 {object} errorResponse
 // @Failure 404 {object} errorResponse
 // @Failure 500 {object} errorResponse
-// @Router /api/v2/lists/:id/items/:city [post]
+// @Router /api/v2/lists/{id}/items/{city} [post]
 func (h *Handler) CreateItem(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
@@ -51,7 +51,7 @@ func (h *Handler) CreateItem(c *gin.Context) {
 // @Failure 400 {object} errorResponse
 // @Failure 404 {object} errorResponse
 // @Failure 500 {object} errorResponse
-// @Router /api/v2/lists/:id/items/ [get]
+// @Router /api/v2/lists/{id}/items/ [get]
 func (h *Handler) GetAllItems(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
@@ -68,4 +68,40 @@ func (h *Handler) GetAllItems(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, items)
+}
+
+// @Summary Delete items by id
+// @Security ApiKeyAuth
+// @Tags items
+// @Description delete items by id
+// @ID delete-items-by-id
+// @Accept  json
+// @Produce  json
+// @Success 200 {string} string "Status"
+// @Failure 400 {object} errorResponse
+// @Failure 404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Router /api/v2/lists/{id}/items/{id} [delete]
+func (h *Handler) DeleteItem(c *gin.Context) {
+	userId, err := getUserId(c)
+	if err != nil {
+		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		NewErrorResponse(c, http.StatusBadRequest, "invalid list id param")
+	}
+	itemId, err := strconv.Atoi(c.Param("item_id"))
+	if err != nil {
+		NewErrorResponse(c, http.StatusBadRequest, "invalid list id param")
+	}
+	err = h.listUseCase.DeleteItems(userId, id, itemId)
+	if err != nil {
+		NewErrorResponse(c, http.StatusNotFound, err.Error())
+		return
+	}
+	c.JSON(http.StatusOK, map[string]interface{}{
+		"Status": "ok",
+	})
 }

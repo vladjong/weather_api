@@ -1,7 +1,7 @@
 package v2
 
 import (
-	_ "weather_api/docs"
+	// _ "weather_api/docs"
 	"weather_api/internal/usecase"
 
 	"github.com/gin-gonic/gin"
@@ -54,12 +54,13 @@ func (h *Handler) NewRouter() *gin.Engine {
 			lists.GET("/:id", h.GetListById)
 			lists.GET("/", h.GetAllList)
 			lists.PUT("/:id", h.UpdateList)
-			lists.DELETE("/:title", h.DeleteList)
+			lists.DELETE("/:id", h.DeleteList)
 
 			items := lists.Group(":id/items")
 			{
 				items.POST("/:city", h.CreateItem)
 				items.GET("/", h.GetAllItems)
+				items.DELETE("/:item_id", h.DeleteItem)
 			}
 		}
 	}
