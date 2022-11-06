@@ -1,8 +1,8 @@
 package v1
 
 import (
-	_ "weather_api/docs"
-	"weather_api/internal/usercase"
+	// _ "weather_api/docs"
+	"weather_api/internal/usecase"
 
 	"github.com/gin-gonic/gin"
 	swaggerfiles "github.com/swaggo/files"
@@ -10,10 +10,10 @@ import (
 )
 
 type Handler struct {
-	weatherUseCase usercase.WeatherAPI
+	weatherUseCase usecase.WeatherAPI
 }
 
-func NewHandler(weatherUseCase usercase.WeatherAPI) *Handler {
+func NewHandler(weatherUseCase usecase.WeatherAPI) *Handler {
 	return &Handler{
 		weatherUseCase: weatherUseCase,
 	}
@@ -24,7 +24,7 @@ func NewHandler(weatherUseCase usercase.WeatherAPI) *Handler {
 // @description This is a service that predicts the weather
 
 // @host      localhost:8080
-// @BasePath  /api/v1
+// @BasePath  /
 func (h *Handler) NewRouter() *gin.Engine {
 	router := gin.New()
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))

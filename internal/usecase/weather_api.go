@@ -1,17 +1,17 @@
-package usercase
+package usecase
 
 import (
 	"fmt"
 	"time"
-	postgressql "weather_api/internal/adapters/db/postgres_sql"
+	"weather_api/internal/adapters/db"
 	"weather_api/internal/entities"
 )
 
 type weatherApiUseCase struct {
-	storage postgressql.WeatherStorageAPI
+	storage db.WeatherStorageAPI
 }
 
-func NewWeatherApiUseCase(storage postgressql.WeatherStorageAPI) *weatherApiUseCase {
+func NewWeatherApiUseCase(storage db.WeatherStorageAPI) *weatherApiUseCase {
 	return &weatherApiUseCase{storage: storage}
 }
 

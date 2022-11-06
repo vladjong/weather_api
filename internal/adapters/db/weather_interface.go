@@ -1,4 +1,4 @@
-package postgressql
+package db
 
 import (
 	"time"

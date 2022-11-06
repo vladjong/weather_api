@@ -1,19 +1,19 @@
-package usercase
+package usecase
 
 import (
 	"encoding/json"
-	postgressql "weather_api/internal/adapters/db/postgres_sql"
+	"weather_api/internal/adapters/db"
 	"weather_api/internal/entities"
 	weatherserviceclient "weather_api/pkg/weather_service_client"
 )
 
 type weatherServiceUseCase struct {
-	storage        postgressql.WeatherStorage
+	storage        db.WeatherStorage
 	weatherService weatherserviceclient.WeatherService
 	cities         []entities.City
 }
 
-func NewWeatherServiceUseCase(storage postgressql.WeatherStorage, weatherService weatherserviceclient.WeatherService) *weatherServiceUseCase {
+func NewWeatherServiceUseCase(storage db.WeatherStorage, weatherService weatherserviceclient.WeatherService) *weatherServiceUseCase {
 	return &weatherServiceUseCase{
 		storage:        storage,
 		weatherService: weatherService,
